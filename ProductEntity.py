@@ -35,12 +35,15 @@ class ProductEntity:
 
 	def build_json_blob(self):
 		json_object = {}
-		json_object['sku'] = self.get_sku()
+		
 		data = {
 			"name" : self.get_name(),
 			"unit_price" : self.get_unit_price(),
 			"description" : self.get_description()
 		}
 
-		json_object['data'] = data
+		json_object = {
+			"sku" : self.get_sku(),
+			"data" : data
+		}
 		return json.dumps(json_object)
