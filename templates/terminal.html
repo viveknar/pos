@@ -1,0 +1,35 @@
+<!doctype html>
+
+<html>
+<head>
+	<title>Point of Sales</title>
+	<meta http-equiv="content-type" content="text/html" charset="UTF-8">
+	<meta name="description" content="Front-end terminal for a Point of sales system">
+</head>
+<body>
+	<h2 align="center">Terminal</h2>
+	<form method="post">
+		<table>
+			<tr>
+				<label>
+					<td><div>Product Code</div></td>
+					<td><input type="text" name="product_id" value="{{product_id}}"></td>
+				</label>
+			</tr>
+			<tr>
+				<td><br></td>
+			</tr>
+			<tr>
+				<td><input type="submit" value="Scan Item"></td>
+			</tr>
+			<tr>
+				<td><br><br></td>
+			</tr>
+			<tr>
+				<td><div>Total</div></td>
+				<td><div>$ {{total}}</div></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

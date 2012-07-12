@@ -1,0 +1,47 @@
+<!doctype html>
+
+<html>
+<head>
+	<title>New Product</title>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+</head>
+<body>
+	<form method="post">
+		<h2 align="center">Enter product details</h2>
+		<table>
+			<tr>
+				<label>
+					<td><div>SKU</div></td>
+					<td><div><input type="text" name="sku" value="{{sku}}"></div></td>
+					<td><div name="sku_error">{{sku_error}}</div></td>
+				</label>
+			</tr>
+			<tr>
+				<label>
+					<td><div>Name</div></td>
+					<td><div><input type="text" name="name" value="{{name}}"></div></td>
+					<td><div name="name_error">{{name_error}}</div></td>
+				</label>
+			</tr>
+			<tr>
+				<label>
+					<td><div>Unit Price</div></td>
+					<td><div><input type="text" name="unit_price" value="{{unit_price}}"></div></td>
+					<td><div name="unit_price_error">{{unit_price_error}}</div></td>
+				</label>
+			</tr>
+			<tr>
+				<label>
+					<td><div>Description (Optional)</div></td>
+					<td><div><input type="text" name="description" value="{{description}}"></div></td>
+					<td><div name="description_error">{{description_error}}</div></td>
+				</label>
+			</tr>
+			<tr><td><br><br></td></tr>
+			<tr>
+				<td><div><input type="submit" value="Enter Product"></div></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
