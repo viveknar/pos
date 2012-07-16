@@ -2,12 +2,12 @@
 
 <html>
 <head>
-	<title>New Product</title>
+	<title>{% block title %}New{% endblock %} Product</title>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
 </head>
 <body>
-	<form method="post">
-		<h2 align="center">Enter product details</h2>
+	{% block form %}<form method="post">{% endblock %}
+		<h2 align="center">{% block h2 %}Enter{% endblock %} product details</h2>
 		<table>
 			<tr>
 				<label>
@@ -16,6 +16,7 @@
 					<td><div name="sku_error">{{sku_error}}</div></td>
 				</label>
 			</tr>
+			{% block name %}
 			<tr>
 				<label>
 					<td><div>Name</div></td>
@@ -23,6 +24,7 @@
 					<td><div name="name_error">{{name_error}}</div></td>
 				</label>
 			</tr>
+			{% endblock %}
 			<tr>
 				<label>
 					<td><div>Unit Price</div></td>
@@ -32,11 +34,27 @@
 			</tr>
 			<tr>
 				<label>
+					<td><div>Bulk Quantity (Optional)</div></td>
+					<td><div><input type="text" name="bulk_quantity" value="{{bulk_quantity}}"></div></td>
+					<td><div name="bulk_quantity_error">{{bulk_quantity_error}}</div></td>
+				</label>
+			</tr>
+			<tr>
+				<label>
+					<td><div>Bulk Price (Optional)</div></td>
+					<td><div><input type="text" name="bulk_price" value="{{bulk_price}}"></div></td>
+					<td><div name="bulk_price_error">{{bulk_price_error}}</div></td>
+				</label>
+			</tr>
+			{% block description %}
+			<tr>
+				<label>
 					<td><div>Description (Optional)</div></td>
 					<td><div><input type="text" name="description" value="{{description}}"></div></td>
 					<td><div name="description_error">{{description_error}}</div></td>
 				</label>
 			</tr>
+			{% endblock %}
 			<tr><td><br><br></td></tr>
 			<tr>
 				<td><div><input type="submit" value="Enter Product"></div></td>

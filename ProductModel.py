@@ -17,25 +17,26 @@ class Product(db.Model):
 			return False
 
 	@classmethod
-	def delete(cls, sku=None):
-		if sku:
-			p = cls.get(sku)
-			try:
-				db.delete(p.key())
-				return True
-			except:
-				return False
-		else:
+	def delete(cls, sku=None ,all_entries=False):
+		if all_entries:
 			flag = False
 			q = Product.all()
 			for entry in q:
 				try:
 					db.delete(entry.key())
-					flag = True
-					break
 				except:
-					pass
+					return False
+			flag = True
 			return flag
+		else:
+			if sku:
+				p = cls.get(sku)
+				try:
+					db.delete(p.key())
+					return True
+				except:
+					return False
+		
 
 	@classmethod
 	def get(cls, sku):
@@ -48,3 +49,17 @@ class Product(db.Model):
 			except:
 				pass
 		return item
+
+	@classmethod
+	def update(cls, entity):
+		try:
+			entity.put()
+			return True
+		except:
+			return False
+
+	@classmethod
+	def get_inventory(self):
+		items = Product.all()
+		return items
+

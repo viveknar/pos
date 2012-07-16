@@ -12,22 +12,22 @@
 		<table>
 			<tr>
 				<label>
-					<td><div>Product Code</div></td>
-					<td><input type="text" name="product_id" value="{{product_id}}"></td>
+					<td><div>Scanned Items</div></td>
 				</label>
 			</tr>
 			<tr>
-				<td><br></td>
+				<td><textarea rows="20" cols="40" name="scanned_items">{{scanned_items}}</textarea></td>
+				<td><div>{{scanned_items_error}}</div></td>
 			</tr>
 			<tr>
-				<td><input type="submit" value="Scan Item"></td>
+				<td><input type="submit" value="Calculate Total"></td>
 			</tr>
 			<tr>
 				<td><br><br></td>
 			</tr>
 			<tr>
 				<td><div>Total</div></td>
-				<td><div>$ {{total}}</div></td>
+				<td><div name="total">$ {{total}}</div></td>
 			</tr>
 		</table>
 	</form>
