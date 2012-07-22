@@ -8,9 +8,16 @@ class ProductEntity:
 		if kw:
 			self._sku = kw['sku']
 			self._name = kw['name']
-			self._unit_price = kw['unit_price']
+			if kw['unit_price']:
+				self._unit_price = self.convert_to_currency(kw['unit_price'], kw['currency'])
+			else:
+				self._unit_price = ''
+
 			self._bulk_quantity = kw['bulk_quantity']
-			self._bulk_price = kw['bulk_price']
+			if kw['bulk_price']:
+				self._bulk_price = self.convert_to_currency(kw['bulk_price'], kw['currency'])
+			else:
+				self._bulk_price = ''
 			self._description = kw['description']
 		else:
 			self._sku = ''
@@ -20,6 +27,13 @@ class ProductEntity:
 			self._bulk_price = ''
 			self._description = ''
 
+	def convert_to_currency(self, number, currency='$'):
+		try:
+			c = currency+'{:,.2f}'.format(float(number))
+		except:
+			c = currency+'0.00'
+		return c
+		
 	def get_sku(self):
 		return self._sku
 
@@ -35,8 +49,8 @@ class ProductEntity:
 	def get_unit_price(self):
 		return self._unit_price
 
-	def set_unit_price(self, unit_price):
-		self._unit_price = unit_price
+	def set_unit_price(self, unit_price, currency='$'):
+		self._unit_price = self.convert_to_currency(unit_price, currency)
 
 	def get_bulk_quantity(self):
 		return self._bulk_quantity
@@ -47,8 +61,8 @@ class ProductEntity:
 	def get_bulk_price(self):
 		return self._bulk_price
 
-	def set_bulk_price(self, bulk_price):
-		self._bulk_price = bulk_price
+	def set_bulk_price(self, bulk_price, currency='$'):
+		self._bulk_price = self.convert_to_currency(bulk_price, currency)
 
 	def get_description(self):
 		return self._description
@@ -56,30 +70,39 @@ class ProductEntity:
 	def set_description(self, description):
 		self._description = description
 
-	def insert(self):
-		sku = self._sku
-		product = self.build_json()
-		if sku and product:
-			item = Product.get(sku)
-			if not item:
-				Product.insert(sku=sku, product=product)
-				return True
-			else:
-				return False
-
-	def update(self):
-		sku = self._sku
-		product = self.build_json()
-		item = Product.get(sku)
-		if item:
-			item.product = product
-			return Product.update(item)
+	def insert(self, DBNames=[]):
+		if len(DBNames) > 0:		
+			for DBName in DBNames:
+				sku = self._sku
+				product = self.build_json()
+				if sku and product:
+					item = DBName.get(sku)
+					if not item:
+						DBName.insert(sku=sku, product=product)
+						return True
+					else:
+						return False
 		return False
 
+	def update(self, DBNames=[]):
+		if len(DBNames) > 0:
+			for DBName in DBNames:
+				sku = self._sku
+				product = self.build_json()
+				item = DBName.get(sku)
+				if item:
+					item.product = product
+					return DBName.update(item)
+				return False
+		return False
 	
-	def delete(self, all_entries=False):
-		return Product.delete(sku=self._sku, all_entries=all_entries)
-
+	def delete(self, DBNames=[]):
+		if len(DBNames) > 0:
+			for DBName in DBNames:
+				status = Product.delete(sku=self._sku)
+				if status is False:
+					return False
+		return True
 
 	def build_json(self):
 		json_object = {}

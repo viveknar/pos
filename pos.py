@@ -55,7 +55,7 @@ class TerminalPage(BaseHandler):
 			terminal.scan(item)
 		total_price = terminal.total_price()
 		
-		self.render('terminal.html', scanned_items=scanned_items, total=str(total_price))
+		self.render('terminal.html', scanned_items=scanned_items, total='{:,.2f}'.format(float(total_price)))
 
 class NewProductPage(BaseHandler):
 	def get(self):
@@ -68,7 +68,10 @@ class NewProductPage(BaseHandler):
 		bulk_quantity = self.request.get('bulk_quantity')
 		bulk_price = self.request.get('bulk_price')
 		description = self.request.get('description')
-		inventory_count = '100'
+		currency = self.request.get('currency')
+
+		if len(currency) == 0:
+			currency = '$'
 
 		p = ProductEntity(
 					sku = sku, 
@@ -77,10 +80,11 @@ class NewProductPage(BaseHandler):
 					bulk_quantity = bulk_quantity,
 					bulk_price = bulk_price,
 					description = description,
-					inventory_count = inventory_count
+					currency = currency
 				)
-		if p.insert():
-			self.write(p.build_json())
+		if p.insert([Product]):
+			self.render('new_product.html')
+			self.write("<br><br>"+p.build_json()+"<br><br>was just added to the datastore")
 		else:
 			self.write("error")
 
@@ -92,13 +96,16 @@ class DeleteProductPage(BaseHandler):
 		all_entries = self.request.get('all_entries')
 		
 		if all_entries.lower() == 'true':
-			ProductEntity().delete(all_entries=True)
+			Product.delete(all_entries=True)
 			self.write("Items deleted")
 		else:
 			if sku:
 				details = Terminal().get_product_details(sku)
-				p = ProductEntity().load_json(details)
-				p.delete()
+				if details:
+					p = ProductEntity().load_json(details)
+					p.delete([Product])
+				else:
+					self.write('Item not found')
 
 class SetPricePage(BaseHandler):
 	def get(self):
@@ -114,8 +121,13 @@ class SetPricePage(BaseHandler):
 			unit_price = self.request.get('unit_price')
 			bulk_price = self.request.get('bulk_price')
 			bulk_quantity = self.request.get('bulk_quantity')
+			currency = self.request.get('currency')
+
+			if len(currency) == 0:
+				currency = None
+
 			if terminal.get_product_details(sku):
-				terminal.set_price(sku, unit_price=unit_price, bulk_price=bulk_price, bulk_quantity=bulk_quantity)
+				terminal.set_price(authenticated=True, DBNames=[Product], sku=sku, unit_price=unit_price, bulk_price=bulk_price, bulk_quantity=bulk_quantity, currency=currency)
 				self.write(json.dumps(terminal.get_product_details(sku)))
 			else:
 				self.write("item not found")

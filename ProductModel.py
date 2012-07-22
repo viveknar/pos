@@ -17,7 +17,7 @@ class Product(db.Model):
 			return False
 
 	@classmethod
-	def delete(cls, sku=None ,all_entries=False):
+	def delete(cls, sku=None, all_entries=False):
 		if all_entries:
 			flag = False
 			q = Product.all()
@@ -59,7 +59,9 @@ class Product(db.Model):
 			return False
 
 	@classmethod
-	def get_inventory(self):
+	def get_inventory(cls):
 		items = Product.all()
 		return items
+
+
 
