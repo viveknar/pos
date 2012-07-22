@@ -123,12 +123,13 @@ class SetPricePage(BaseHandler):
 			bulk_quantity = self.request.get('bulk_quantity')
 			currency = self.request.get('currency')
 
-			if len(currency) == 0:
-				currency = None
-
 			if terminal.get_product_details(sku):
-				terminal.set_price(authenticated=True, DBNames=[Product], sku=sku, unit_price=unit_price, bulk_price=bulk_price, bulk_quantity=bulk_quantity, currency=currency)
-				self.write(json.dumps(terminal.get_product_details(sku)))
+				if len(currency) == 0:
+					terminal.set_price(authenticated=True, DBNames=[Product], sku=sku, unit_price=unit_price, bulk_price=bulk_price, bulk_quantity=bulk_quantity)
+					self.write(json.dumps(terminal.get_product_details(sku)))
+				else:
+					terminal.set_price(authenticated=True, DBNames=[Product], sku=sku, unit_price=unit_price, bulk_price=bulk_price, bulk_quantity=bulk_quantity, currency=currency)
+					self.write(json.dumps(terminal.get_product_details(sku)))
 			else:
 				self.write("item not found")
 
