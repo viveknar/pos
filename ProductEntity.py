@@ -4,6 +4,9 @@ from ProductModel import *
 
 class ProductEntity:
 	
+	'''
+	Setting all properties for a product when it is being instatiated.
+	'''
 	def __init__(self, **kw):
 		if kw:
 			self._sku = kw['sku']
@@ -27,6 +30,10 @@ class ProductEntity:
 			self._bulk_price = ''
 			self._description = ''
 
+	'''
+	Giving an option to set currency. The same product can be sold across different countries, and this 
+	makes storing prices for different regions easy. The default currency is set to USD
+	'''
 	def convert_to_currency(self, number, currency='$'):
 		try:
 			c = currency+'{:,.2f}'.format(float(number))
@@ -34,6 +41,9 @@ class ProductEntity:
 			c = currency+'0.00'
 		return c
 		
+	'''
+	Bunch of getter and setter methods to access all the private members of each product entity
+	'''
 	def get_sku(self):
 		return self._sku
 
@@ -70,6 +80,11 @@ class ProductEntity:
 	def set_description(self, description):
 		self._description = description
 
+	'''
+	Function to insert the product into the database. Additional feature to add product to any database 
+	mentioned in DBNames. 
+	This is to show that the same product could be inserted to multiple databases located in multiple locations
+	'''
 	def insert(self, DBNames=[]):
 		if len(DBNames) > 0:		
 			for DBName in DBNames:
@@ -83,7 +98,9 @@ class ProductEntity:
 					else:
 						return False
 		return False
-
+	'''
+	Update a product entry in multiple databases
+	'''
 	def update(self, DBNames=[]):
 		if len(DBNames) > 0:
 			for DBName in DBNames:
@@ -95,7 +112,9 @@ class ProductEntity:
 					return DBName.update(item)
 				return False
 		return False
-	
+	'''
+	Delete the product from the database
+	'''
 	def delete(self, DBNames=[]):
 		if len(DBNames) > 0:
 			for DBName in DBNames:
@@ -104,6 +123,10 @@ class ProductEntity:
 					return False
 		return True
 
+	'''
+	Each product is stored as a JSON object representing all features of the product. This way the API can
+	be easily integrated with a RESTful API. 
+	'''
 	def build_json(self):
 		json_object = {}
 		
@@ -125,6 +148,9 @@ class ProductEntity:
 		}
 		return json.dumps(json_object)
 
+	'''
+	Loads a json string representing product into a ProductEntity object
+	'''
 	def load_json(self, product):
 		self._sku = product['sku']
 		self._name = product['data']['name']

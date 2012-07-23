@@ -5,14 +5,22 @@ import json
 from google.appengine.api import memcache	
 import logging
 
-# Terminal class representing the point of sales to scan items
+''' 
+Terminal class representing the point of sales to scan items
+'''
 class Terminal:
 	def __init__(self, items_list={}):
 		self._items_list = items_list
 
+	'''
+	Return a list of all items in the checkout item list
+	'''
 	def get_item_list(self):
 		return self._items_list
 
+	'''
+	Get the product details for a product given a product SKU
+	'''
 	def get_product_details(self, sku):
 		# TODO: Implement some sort of caching system (memcache) to cut down frequent requests
 		# being made to the database
@@ -22,12 +30,19 @@ class Terminal:
 			memcache.set(sku, data)
 			return json.loads(data)
 	
+	'''
+	Scan items and add it to the item list to compute the total price
+	'''
 	def scan(self, sku):
 		if sku in self._items_list:
 			self._items_list[sku] += 1
 		else:
 			self._items_list[sku] = 1
 	
+	'''
+	Calculate the total price of an item based on the quantity purchased. If 
+	volume price is set, then calculate based on the volume price.
+	'''
 	def calculate_price(self, sku, count):
 		try:
 			entity = self.get_product_details(sku)
@@ -50,6 +65,10 @@ class Terminal:
 		except:
 			return 0.00
 		
+	'''
+	Set the price for an item. Item prices can only be set when correctly authenticated 
+	to ensure only managers and store people can set prices.
+	'''
 	def set_price(self, authenticated=False, DBNames=[], sku=None, unit_price=None, bulk_quantity=None, bulk_price=None, currency='$'):
 		if authenticated and sku and unit_price:
 			try:
@@ -68,6 +87,9 @@ class Terminal:
 			return status
 		return False
 
+	'''
+	Calculate the total price for all the items present in the checkout item list.
+	'''
 	def total_price(self):
 		total = 0.00
 		for sku, count in self._items_list.iteritems():
@@ -75,6 +97,9 @@ class Terminal:
 		self._items_list.clear()
 		return total
 
+	'''
+	Get a list of all the items in the inventory along with product codes and description.
+	'''
 	def get_inventory(self):
 		items = Product.all()
 		return items

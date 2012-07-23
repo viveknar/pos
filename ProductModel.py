@@ -1,10 +1,19 @@
 from google.appengine.ext import db
 
-# The Product model representing the Product table
+'''
+The Product model representing the Product table
+'''
+
 class Product(db.Model):
+	'''
+	fields in the table
+	'''
 	sku = db.StringProperty(required = True)
 	product = db.TextProperty(required = True)
 
+	'''
+	Insert to database
+	'''
 	@classmethod
 	def insert(cls, **kw):
 		sku = kw['sku']
@@ -15,7 +24,9 @@ class Product(db.Model):
 			return True
 		except:
 			return False
-
+	'''
+	Delete from database
+	'''
 	@classmethod
 	def delete(cls, sku=None, all_entries=False):
 		if all_entries:
@@ -37,7 +48,9 @@ class Product(db.Model):
 				except:
 					return False
 		
-
+	'''
+	select from database
+	'''				
 	@classmethod
 	def get(cls, sku):
 		item = None
@@ -50,6 +63,9 @@ class Product(db.Model):
 				pass
 		return item
 
+	'''
+	Update database entry
+	'''	
 	@classmethod
 	def update(cls, entity):
 		try:
